@@ -1,4 +1,4 @@
-package com.gks.absolutebank.feature.main
+package com.gks.absolutebank.feature.main1
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode

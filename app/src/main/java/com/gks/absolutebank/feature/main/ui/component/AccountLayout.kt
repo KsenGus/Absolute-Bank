@@ -1,4 +1,4 @@
-package com.gks.absolutebank.feature.main
+package com.gks.absolutebank.feature.main1
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -27,14 +25,13 @@ import androidx.compose.ui.unit.sp
 import com.gks.absolutebank.R
 
 @Composable
-fun AccountLayout(
+internal fun AccountLayout(
+  modifier: Modifier = Modifier,
   currency: String,
   number: String,
   balance: Double,
   iconResource: Int,
   onExpandClick: ()->Unit,
-  isExpanded: Boolean,
-  cards: List<Card>,
 ) {
   Column {
     Row(
@@ -78,31 +75,13 @@ fun AccountLayout(
         onClick = onExpandClick
       )
     }
-    //if(isExpanded) {
-      for(i in 0..cards.size-1) {
-        CardLayout(
-          number = cards[i].number,
-          status = cards[i].status,
-          paymentSystem = cards[i].paymentSystem
-        )
-      //}
-      /*LazyColumn(
-      ) {
-        items(cards){
-          card -> CardLayout(
-            number = card.number,
-            status = card.status,
-            statusColor = Color.Red
-          )
-        }
-      }*/
-    }
   }
 
 }
 
 @Composable
-fun ExpandControl(
+private fun ExpandControl(
+  modifier: Modifier = Modifier,
   onClick: ()->Unit
 ) {
   Box(
@@ -112,7 +91,8 @@ fun ExpandControl(
       )
       .background(color = Color(0xFF403A47),)
       .width(40.dp)
-      .height(28.dp)
+      .height(28.dp),
+    contentAlignment = Alignment.Center
   ) {
     Icon(
       painter = painterResource(R.drawable.ic_chevron_down_24),

@@ -1,6 +1,5 @@
-package com.gks.absolutebank.feature.main
+package com.gks.absolutebank.feature.main1
 
-import androidx.annotation.ColorLong
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,22 +10,26 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
+import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.gks.absolutebank.R
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.gks.absolutebank.feature.main.ui.MainScreenViewModel
+import com.gks.absolutebank.feature.main.ui.MainScreenViewState
+import com.gks.absolutebank.feature.main.ui.mappers.getCurrencySign
+import com.gks.absolutebank.feature.main.ui.mappers.getIcon
+import com.gks.absolutebank.ui.theme.Typography
 
 @Composable
 fun MainScreenLayout(
@@ -48,8 +51,7 @@ fun MainScreenLayout(
       modifier = Modifier.fillMaxWidth(),
       text = stringResource(R.string.main),
       color = Color.White,
-      fontSize = 16.sp,
-      fontWeight = FontWeight(600),
+      style = Typography.bodyLarge,
       textAlign = TextAlign.Center
     )
     Spacer(modifier = Modifier.height(11.dp))
@@ -69,15 +71,30 @@ fun MainScreenLayout(
       }
       itemsIndexed(state.value.accountList) { i, account ->
         AccountLayout(
-          viewModel.getCurrencySign(account.currency),
-          account.number,
-          account.balance,
-          iconResource = viewModel.getIcon(account.currency),
-          onExpandClick = { viewModel.updateExpansionState(i) },
-          isExpanded = state.value.accountsExpansionStates[i],
-          cards = state.value.accountList[i].cards
+         currency = getCurrencySign(account.currency),
+          number = account.number,
+          balance = account.balance,
+          iconResource = getIcon(account.currency),
+          onExpandClick = {
+            viewModel.updateExpansionState(account)
+            println(account.isExpanded)
+          }
         )
-        if(i != state.value.accountList.size - 1 && !state.value.accountsExpansionStates[i])
+        if(account.isExpanded) {
+          account.cards.forEach {
+            CardLayout(
+              number = it.number,
+              status = it.status,
+              paymentSystem = it.paymentSystem
+            )
+            if(i != account.cards.lastIndex)
+              HorizontalDivider(
+                modifier = Modifier
+                  .padding(start = 72.dp, end = 16.dp),
+                color = Color(0xFF403A47))
+          }
+        }
+        if(i != state.value.accountList.lastIndex)
           HorizontalDivider(
             modifier = Modifier
               .padding(start = 72.dp, end = 16.dp),
@@ -99,12 +116,12 @@ fun MainScreenLayout(
           color = Color(0xFF706D76)
         )
       }
-      itemsIndexed(state.value.depositList) {
-        i, deposit ->  DepositLayout(
-          currency = viewModel.getCurrencySign(deposit.currency),
+      itemsIndexed(state.value.depositList) { i, deposit ->
+        DepositLayout(
+          currency = getCurrencySign(deposit.currency),
           name = deposit.name,
           balance = deposit.balance,
-          iconResource = viewModel.getIcon(deposit.currency),
+          iconResource = getIcon(deposit.currency),
           rate = deposit.rate,
           term = deposit.term
         )
