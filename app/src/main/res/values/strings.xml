@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Absolute Bank</string>
+    <string name="rate">Ставка</string>
+    <string name="up_to">До</string>
+    <string name="main">Главная</string>
+    <string name="accounts">Счета</string>
+    <string name="deposits">Вклады</string>
+    <string name="visa">visa</string>
+    <string name="master">master</string>
 </resources>
