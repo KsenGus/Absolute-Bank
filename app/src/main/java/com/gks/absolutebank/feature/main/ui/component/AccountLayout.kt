@@ -13,16 +13,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.gks.absolutebank.R
+import com.gks.absolutebank.ui.theme.Typography
 
 @Composable
 internal fun AccountLayout(
@@ -32,6 +33,7 @@ internal fun AccountLayout(
   balance: Double,
   iconResource: Int,
   onExpandClick: ()->Unit,
+  rotation: Float
 ) {
   Column {
     Row(
@@ -42,7 +44,7 @@ internal fun AccountLayout(
       Box(
         modifier = Modifier
           .background(
-            color = Color(0xFF403A47),
+            color = MaterialTheme.colorScheme.secondaryContainer,
             shape = RoundedCornerShape(999.dp)
           )
           .size(40.dp),
@@ -50,7 +52,7 @@ internal fun AccountLayout(
       ) {
         Icon(
           painter = painterResource(iconResource),
-          tint = Color.White,
+          tint = MaterialTheme.colorScheme.onTertiary,
           contentDescription = null
         )
       }
@@ -59,20 +61,19 @@ internal fun AccountLayout(
       ) {
         Text(
           text = number,
-          color = Color.White,
-          fontSize = 15.sp,
-          fontWeight = FontWeight(400)
+          color = MaterialTheme.colorScheme.onTertiary,
+          style = Typography.bodyLarge
         )
         Text(
-          text = balance.toString() + " " + currency,
-          color = Color(0xFF6C78E6),
-          fontSize = 15.sp,
-          fontWeight = FontWeight(400)
+          text = stringResource(R.string.balance_string, balance.toString(), currency),
+          color = MaterialTheme.colorScheme.inversePrimary,
+          style = Typography.bodyLarge
         )
       }
       Spacer(modifier = Modifier.weight(1f))
       ExpandControl(
-        onClick = onExpandClick
+        onClick = onExpandClick,
+        rotation = rotation
       )
     }
   }
@@ -82,22 +83,24 @@ internal fun AccountLayout(
 @Composable
 private fun ExpandControl(
   modifier: Modifier = Modifier,
-  onClick: ()->Unit
+  onClick: ()->Unit,
+  rotation: Float
 ) {
   Box(
     modifier = Modifier
       .clickable(
         onClick = onClick
       )
-      .background(color = Color(0xFF403A47),)
+      .background(color = MaterialTheme.colorScheme.secondaryContainer)
       .width(40.dp)
       .height(28.dp),
     contentAlignment = Alignment.Center
   ) {
     Icon(
+      modifier = Modifier.rotate(rotation),
       painter = painterResource(R.drawable.ic_chevron_down_24),
       contentDescription = null,
-      tint = Color(0xFF706D76)
+      tint = MaterialTheme.colorScheme.tertiary
     )
   }
 }

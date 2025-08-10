@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,11 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.gks.absolutebank.R
+import com.gks.absolutebank.ui.theme.Typography
 
 @Composable
 internal fun CardLayout(
@@ -50,7 +50,7 @@ internal fun CardLayout(
     ) {
       Icon(
         painter = painterResource(R.drawable.ic_input_24),
-        tint = Color.White,
+        tint = MaterialTheme.colorScheme.onTertiary,
         contentDescription = null
       )
     }
@@ -59,15 +59,13 @@ internal fun CardLayout(
     ) {
       Text(
         text = number,
-        color = Color.White,
-        fontSize = 15.sp,
-        fontWeight = FontWeight(400)
+        color = MaterialTheme.colorScheme.onTertiary,
+        style = Typography.bodyLarge
       )
       Text(
         text = status,
-        color = Color.White,
-        fontSize = 13.sp,
-        fontWeight = FontWeight(400)
+        color = MaterialTheme.colorScheme.onTertiary,
+        style = Typography.bodyMedium
       )
     }
     Spacer(modifier = Modifier.weight(1f))
@@ -93,21 +91,29 @@ private fun CardView(
         shape = RoundedCornerShape(2.dp)
       )
       .width(40.dp)
-      .height(28.dp)
+      .height(28.dp),
+    contentAlignment = Alignment.CenterEnd
   ) {
-    Text(
-      modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 2.dp),
-      text = number,
-      fontSize = 10.sp,
-      color = Color.White,
-      textAlign = TextAlign.Right
-    )
-    Icon(
-      painter = painterResource(iconResource),
-      tint = Color.Transparent,
-      contentDescription = null
-    )
+    Column(
+      verticalArrangement = Arrangement.spacedBy(1.dp)
+    ) {
+      Text(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(horizontal = 2.dp),
+        text = number,
+        style = Typography.labelLarge,
+        color = MaterialTheme.colorScheme.onTertiary,
+        textAlign = TextAlign.Right
+      )
+      Row {
+        Spacer(modifier = Modifier.weight(1f))
+        Icon(
+          painter = painterResource(iconResource),
+          tint = MaterialTheme.colorScheme.onTertiary,
+          contentDescription = null
+        )
+      }
+    }
   }
 }

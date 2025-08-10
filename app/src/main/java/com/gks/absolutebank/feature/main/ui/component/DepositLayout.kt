@@ -11,17 +11,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.gks.absolutebank.R
+import com.gks.absolutebank.ui.theme.Typography
 
 @Composable
 internal fun DepositLayout(
@@ -42,7 +41,7 @@ internal fun DepositLayout(
     Box(
       modifier = Modifier
         .background(
-          color = Color(0xFF403A47),
+          color = MaterialTheme.colorScheme.primary,
           shape = RoundedCornerShape(999.dp)
         )
         .size(40.dp),
@@ -50,7 +49,7 @@ internal fun DepositLayout(
     ) {
       Icon(
         painter = painterResource(iconResource),
-        tint = Color.White,
+        tint = MaterialTheme.colorScheme.onTertiary,
         contentDescription = null
       )
     }
@@ -59,15 +58,13 @@ internal fun DepositLayout(
     ) {
       Text(
         text = name,
-        color = Color.White,
-        fontSize = 15.sp,
-        fontWeight = FontWeight(400)
+        color = MaterialTheme.colorScheme.onTertiary,
+        style = Typography.bodyLarge
       )
       Text(
-        text = balance.toString() + " " + currency,
-        color = Color(0xFF6C78E6),
-        fontSize = 15.sp,
-        fontWeight = FontWeight(400)
+        text = stringResource(R.string.balance_string, balance.toString(), currency),
+        color = MaterialTheme.colorScheme.inversePrimary,
+        style = Typography.bodyLarge
       )
     }
     Spacer(modifier = Modifier.weight(1f))
@@ -75,16 +72,14 @@ internal fun DepositLayout(
       verticalArrangement = Arrangement.spacedBy(7.dp)
     ) {
       Text(
-        text = stringResource(R.string.rate) + " " + rate + "%",
-        color = Color(0xFF706D76),
-        fontSize = 11.sp,
-        fontWeight = FontWeight(400)
+        text = stringResource(R.string.rate_string, rate.toString()),
+        color = MaterialTheme.colorScheme.tertiary,
+        style = Typography.bodySmall
       )
       Text(
-        text = stringResource(R.string.up_to) + term,
-        color = Color(0xFF706D76),
-        fontSize = 11.sp,
-        fontWeight = FontWeight(400)
+        text = stringResource(R.string.up_to, term),
+        color = MaterialTheme.colorScheme.tertiary,
+        style = Typography.bodySmall
       )
     }
   }
