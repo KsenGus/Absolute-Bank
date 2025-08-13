@@ -1,0 +1,76 @@
+package com.gks.absolutebank.feature.detail.ui
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import com.gks.absolutebank.R
+import com.gks.absolutebank.feature.detail.ui.component.ActionsLayout
+import com.gks.absolutebank.feature.detail.ui.component.CardLayout
+import com.gks.absolutebank.feature.detail.ui.component.PageIndicator
+import com.gks.absolutebank.feature.detail.ui.component.Tabs
+import com.gks.absolutebank.ui.theme.Typography
+
+@Composable
+fun DetailLayout(
+  modifier: Modifier = Modifier,
+  viewModel: DetailsViewModel
+) {
+
+val state = viewModel.state.collectAsState(DetailsViewState())
+  val pagerState = rememberPagerState(pageCount = {state.value.cardList.size })
+
+  Column(
+    modifier = Modifier
+      .background(
+        color = MaterialTheme.colorScheme.primary
+      )
+      .statusBarsPadding()
+      .fillMaxHeight()
+  ) {
+     Text(
+       modifier = Modifier.fillMaxWidth(),
+       text = stringResource(R.string.cards),
+       style = Typography.titleLarge,
+       color = MaterialTheme.colorScheme.onTertiary,
+       textAlign = TextAlign.Center
+     )
+    HorizontalPager(
+      state = pagerState,
+      contentPadding = PaddingValues(24.dp),
+      pageSpacing = 8.dp
+    ) { page ->
+      val card = state.value.cardList[page]
+      CardLayout(
+        name = card.name,
+        number = card.number,
+        isActive = page == pagerState.currentPage,
+        text = if(card.status == stringResource(R.string.active)) stringResource(R.string.balance_string, card.balance, card.currency) else stringResource(R.string.blocked),
+        textColor = if(card.status == stringResource(R.string.active)) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onError,
+        paymentSystemImg = if(card.paymentSystem == stringResource(R.string.visa))  R.drawable.ic_visa_16_6 else R.drawable.ic_mastercard_16_12,
+        expiresAt = card.expiredAt
+      )
+    }
+    PageIndicator(state.value.cardList.size, pagerState.currentPage)
+    Tabs(
+      tabs = state.value.tabsList,
+      activeTab = state.value.activeTab,
+      onTabClick = { tab -> viewModel.updateActiveTab(tab) }
+    )
+    ActionsLayout(
+      actionsList = if(state.value.cardList[pagerState.currentPage].status == stringResource(R.string.active)) state.value.activeCardActions else state.value.blockedCardActions
+    )
+  }
+}

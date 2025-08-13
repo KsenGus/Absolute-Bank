@@ -15,6 +15,7 @@ private val DarkColorScheme = darkColorScheme(
   inversePrimary = contentAccentPrimary,
   onTertiary = contentAccentTertiary,
   secondaryContainer = contentSecondary,
+  onSecondary = textSecondary,
   surfaceContainerLow = skeleton1,
   surfaceContainerLowest = skeleton2
 )
@@ -26,7 +27,8 @@ private val LightColorScheme = lightColorScheme(
   tertiary = textTertiary,
   inversePrimary = contentAccentPrimary,
   onTertiary = contentAccentTertiary,
-  secondaryContainer = contentSecondary
+  secondaryContainer = contentSecondary,
+  onSecondary = textSecondary
 
   /* Other default colors to override
     background = Color(0xFFFFFBFE),

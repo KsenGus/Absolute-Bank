@@ -10,6 +10,7 @@ val textTertiary = Color(0xFF706D76)
 val contentAccentTertiary = Color(0xFFFFFFFF)
 val contentAccentPrimary = Color(0xFF6C78E6)
 val contentError = Color(0xFFFB6176)
+val textSecondary = Color(0xFFC2C1C6)
 
 val skeleton1 = Color.LightGray.copy(alpha = 0.9f)
 val skeleton2 = Color.LightGray.copy(alpha = 0.4f)
