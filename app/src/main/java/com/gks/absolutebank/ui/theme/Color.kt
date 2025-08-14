@@ -2,10 +2,15 @@ package com.gks.absolutebank.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val bgPrimary = Color(0xFF312C39)
+val bgSecondary = Color(0xFF352F3D)
+val contentSecondary = Color(0xFF403A47)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val textTertiary = Color(0xFF706D76)
+val contentAccentTertiary = Color(0xFFFFFFFF)
+val contentAccentPrimary = Color(0xFF6C78E6)
+val contentError = Color(0xFFFB6176)
+
+val skeleton1 = Color.LightGray.copy(alpha = 0.9f)
+val skeleton2 = Color.LightGray.copy(alpha = 0.4f)
+
