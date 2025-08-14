@@ -14,7 +14,9 @@ private val DarkColorScheme = darkColorScheme(
   tertiary = textTertiary,
   inversePrimary = contentAccentPrimary,
   onTertiary = contentAccentTertiary,
-  secondaryContainer = contentSecondary
+  secondaryContainer = contentSecondary,
+  surfaceContainerLow = skeleton1,
+  surfaceContainerLowest = skeleton2
 )
 
 private val LightColorScheme = lightColorScheme(

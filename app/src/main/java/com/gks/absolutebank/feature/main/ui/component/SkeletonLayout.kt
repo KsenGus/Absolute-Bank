@@ -13,17 +13,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.gks.absolutebank.feature.main.ui.component.shimmerBackground
 
 @Composable
 fun SkeletonLayout() {
   Column(
     modifier = Modifier
       .background(
-        color = Color(0xFF312C39)
+        color = MaterialTheme.colorScheme.primary
       )
       .fillMaxHeight()
       .systemBarsPadding()
@@ -39,7 +40,7 @@ fun SkeletonLayout() {
     Column(
       modifier = Modifier
         .background(
-          color = Color(0xFF352F3D)
+          color = MaterialTheme.colorScheme.secondary
         )
     ) {
       Box(

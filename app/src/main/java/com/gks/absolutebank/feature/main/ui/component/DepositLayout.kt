@@ -33,7 +33,7 @@ internal fun DepositLayout(
   rate: Double,
 ) {
   Row(
-    modifier = Modifier
+    modifier = modifier
       .fillMaxWidth()
       .padding(16.dp),
     horizontalArrangement = Arrangement.spacedBy(16.dp)

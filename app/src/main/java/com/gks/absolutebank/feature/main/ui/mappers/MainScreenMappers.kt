@@ -1,5 +1,6 @@
 package com.gks.absolutebank.feature.main.ui.mappers
 
+import androidx.annotation.DrawableRes
 import com.gks.absolutebank.R
 
 fun getCurrencySign(currency: String): String {
@@ -10,6 +11,7 @@ fun getCurrencySign(currency: String): String {
   }
 }
 
+@DrawableRes
 fun getIcon(currency: String): Int {
   return when(currency) {
     "USD" -> R.drawable.ic_usd_10_20

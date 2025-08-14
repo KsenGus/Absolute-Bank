@@ -77,7 +77,6 @@ fun MainScreenLayout(
           iconResource = getIcon(account.currency),
           onExpandClick = {
             viewModel.updateExpansionState(account)
-            println(state.value.accountList)
           },
           rotation = animateFloatAsState(
               targetValue = if (account.isExpanded) 0f else 180f,

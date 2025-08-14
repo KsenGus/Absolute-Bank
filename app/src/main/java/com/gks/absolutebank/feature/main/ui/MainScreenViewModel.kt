@@ -13,15 +13,15 @@ class MainScreenViewModel() : ViewModel() {
     state.update {
       it.copy(
         accountList = state.value.accountList.mapIndexed { i, item ->
-          if (item == account) {
+          if (item.id == account.id) {
             item.copy(
               isExpanded = !item.isExpanded
             )
-          } else item.copy(
-            isExpanded = item.isExpanded
-          )
+          } else item
         }
       )
     }
   }
 }
+
+internal const val VISA_PAYMENT_SYSTEM = "visa"

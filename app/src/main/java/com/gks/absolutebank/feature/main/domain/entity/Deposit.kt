@@ -1,7 +1,6 @@
 package com.gks.absolutebank.feature.main.domain.entity
 
 import androidx.compose.runtime.Immutable
-import com.gks.absolutebank.feature.main1.Id
 
 @Immutable
 data class Deposit(
@@ -13,4 +12,7 @@ data class Deposit(
   val term: String,
   val rate: Double,
   val minSize: Double
-)
+) {
+  @JvmInline
+  value class Id (private val id: String)
+}

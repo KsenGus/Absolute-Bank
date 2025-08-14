@@ -37,7 +37,7 @@ internal fun AccountLayout(
 ) {
   Column {
     Row(
-      modifier = Modifier
+      modifier = modifier
         .padding(16.dp),
       horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {

@@ -20,10 +20,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.gks.absolutebank.R
+import com.gks.absolutebank.feature.main.ui.VISA_PAYMENT_SYSTEM
 import com.gks.absolutebank.ui.theme.Typography
 
 @Composable
@@ -34,7 +34,7 @@ internal fun CardLayout(
   paymentSystem: String
 ) {
   Row(
-    modifier = Modifier
+    modifier = modifier
       .padding(16.dp)
       .fillMaxWidth(),
     horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -71,7 +71,7 @@ internal fun CardLayout(
     Spacer(modifier = Modifier.weight(1f))
     CardView(
       number = number.takeLast(4),
-      iconResource = if (paymentSystem == stringResource(R.string.visa))
+      iconResource = if (paymentSystem == VISA_PAYMENT_SYSTEM)
         R.drawable.ic_visa_16_6
       else R.drawable.ic_mastercard_16_12
       )
@@ -85,7 +85,7 @@ private fun CardView(
   iconResource: Int
 ) {
   Box(
-    modifier = Modifier
+    modifier = modifier
       .background(
         color = Color.Gray,
         shape = RoundedCornerShape(2.dp)
