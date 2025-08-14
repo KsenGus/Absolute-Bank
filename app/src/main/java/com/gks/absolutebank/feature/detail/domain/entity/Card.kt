@@ -1,4 +1,4 @@
-package com.gks.absolutebank.feature.main.domain.entity
+package com.gks.absolutebank.feature.detail.domain.entity
 
 import androidx.compose.runtime.Immutable
 
@@ -10,6 +10,9 @@ data class Card(
   val cardType: String,
   val paymentSystem: String,
   val status: String,
+  val expiredAt: String,
+  val balance: Double,
+  val currency: String
 ) {
   @JvmInline
   value class Id (private val id: String)
