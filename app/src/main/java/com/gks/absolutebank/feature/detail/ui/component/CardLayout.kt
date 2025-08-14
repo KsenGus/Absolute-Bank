@@ -3,12 +3,9 @@ package com.gks.absolutebank.feature.detail.ui.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -21,11 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.gks.absolutebank.R
-import com.gks.absolutebank.feature.detail.ui.mappers.mapCardNumber
+import com.gks.absolutebank.feature.detail.ui.mappers.maskCardNumber
 import com.gks.absolutebank.ui.theme.Typography
 
 @Composable
@@ -41,7 +37,7 @@ fun CardLayout(
 ) {
 
   Column(
-    modifier = Modifier
+    modifier = modifier
       .background(
         color = MaterialTheme.colorScheme.secondaryContainer,
         shape = RoundedCornerShape(12.dp)
@@ -50,7 +46,6 @@ fun CardLayout(
       .paint(
         painter = painterResource(R.drawable.card_background)
       )
-      //.width(272.dp)
       .padding(vertical = 24.dp, horizontal = 16.dp),
     verticalArrangement = Arrangement.SpaceBetween
   ) {
@@ -83,7 +78,7 @@ fun CardLayout(
     )
     Row {
       Text(
-        text = mapCardNumber(number),
+        text = maskCardNumber(number),
         style = Typography.bodyMedium,
         color = MaterialTheme.colorScheme.tertiary
       )

@@ -37,7 +37,7 @@ val state = viewModel.state.collectAsState(DetailsViewState())
   val pagerState = rememberPagerState(pageCount = {state.value.cardList.size })
 
   Column(
-    modifier = Modifier
+    modifier = modifier
       .background(
         color = MaterialTheme.colorScheme.primary
       )
@@ -72,9 +72,9 @@ val state = viewModel.state.collectAsState(DetailsViewState())
         name = card.name,
         number = card.number,
         isActive = page == pagerState.currentPage,
-        text = if(card.status == stringResource(R.string.active)) stringResource(R.string.balance_string, card.balance, card.currency) else stringResource(R.string.blocked),
-        textColor = if(card.status == stringResource(R.string.active)) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onError,
-        paymentSystemImg = if(card.paymentSystem == stringResource(R.string.visa))  R.drawable.ic_visa_16_6 else R.drawable.ic_mastercard_16_12,
+        text = if(card.status == CARD_STATUS_ACTIVE) stringResource(R.string.balance_string, card.balance, card.currency) else card.status,
+        textColor = if(card.status == CARD_STATUS_ACTIVE) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onError,
+        paymentSystemImg = if(card.paymentSystem == VISA_PAYMENT_SYSTEM)  R.drawable.ic_visa_16_6 else R.drawable.ic_mastercard_16_12,
         expiresAt = card.expiredAt
       )
     }
@@ -85,7 +85,7 @@ val state = viewModel.state.collectAsState(DetailsViewState())
       onTabClick = { tab -> viewModel.updateActiveTab(tab) }
     )
     ActionsLayout(
-      actionsList = if(state.value.cardList[pagerState.currentPage].status == stringResource(R.string.active)) state.value.activeCardActions else state.value.blockedCardActions
+      actionsList = if(state.value.cardList[pagerState.currentPage].status == CARD_STATUS_ACTIVE) state.value.activeCardActions else state.value.blockedCardActions
     )
   }
 }

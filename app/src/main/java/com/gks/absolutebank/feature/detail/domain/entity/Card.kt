@@ -1,7 +1,6 @@
 package com.gks.absolutebank.feature.detail.domain.entity
 
 import androidx.compose.runtime.Immutable
-import com.gks.absolutebank.feature.main1.Id
 
 @Immutable
 data class Card(
@@ -14,4 +13,7 @@ data class Card(
   val expiredAt: String,
   val balance: Double,
   val currency: String
-)
+) {
+  @JvmInline
+  value class Id (private val id: String)
+}

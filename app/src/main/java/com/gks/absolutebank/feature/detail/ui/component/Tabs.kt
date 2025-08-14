@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -59,7 +59,7 @@ private fun Tab(
       )
       .background(
        color = if(isActive) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.secondary,
-        shape = RoundedCornerShape(999.dp)
+        shape = CircleShape
       )
       .size(56.dp),
     contentAlignment = Alignment.Center

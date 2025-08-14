@@ -3,12 +3,11 @@ package com.gks.absolutebank.feature.detail.ui
 import com.gks.absolutebank.feature.detail.domain.entity.Card
 import com.gks.absolutebank.feature.detail.domain.entity.CardActions
 import com.gks.absolutebank.feature.detail.domain.entity.Tabs
-import com.gks.absolutebank.feature.main1.Id
 
 data class DetailsViewState (
   val cardList: List<Card> = listOf(
     Card(
-      id = Id("sfjdkf3805e"),
+      id = Card.Id("sfjdkf3805e"),
       number = "3642892300",
       cardType = "debit",
       status = "Активна",
@@ -19,7 +18,7 @@ data class DetailsViewState (
       currency = "USD"
     ),
     Card(
-      id = Id("sfjdkf3805e"),
+      id = Card.Id("sfjdkf3805e"),
       number = "364890908800",
       cardType = "debit",
       status = "Заблокирована",
