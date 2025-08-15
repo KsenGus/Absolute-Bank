@@ -20,8 +20,8 @@ data class MainScreenViewState(
           number = "3642892300",
           cardType = "debit",
           status = "active",
-          paymentSystem = "visa",
-          name = "Карта зарплатная"
+          paymentSystem = "VISA",
+          name = "Карта зарплатная",
         )
       ),
       isExpanded = false
@@ -38,7 +38,7 @@ data class MainScreenViewState(
           number = "3642892300",
           cardType = "debit",
           status = "active",
-          paymentSystem = "visa",
+          paymentSystem = "MASTER",
           name = "Карта зарплатная"
         )
       ),
