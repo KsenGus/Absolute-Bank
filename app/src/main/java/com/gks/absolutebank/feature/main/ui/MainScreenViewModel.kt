@@ -1,10 +1,7 @@
 package com.gks.absolutebank.feature.main.ui
 
 
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.gks.absolutebank.feature.main.domain.MainScreenUseCase
 import com.gks.absolutebank.feature.main.domain.entity.Account
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,6 +41,22 @@ class MainScreenViewModel @Inject constructor(
       state.update {
         it.copy(
           accountList = accounts
+        )
+      }
+    }
+  }
+
+  fun fetchDeposits() {
+    viewModelScope.launch {
+      useCase.fetchDeposits()
+    }
+  }
+
+  fun updateDeposits() {
+    useCase.accounts.onEach { deposits ->
+      state.update {
+        it.copy(
+          accountList = deposits
         )
       }
     }

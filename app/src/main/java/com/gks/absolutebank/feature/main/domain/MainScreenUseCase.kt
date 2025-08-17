@@ -12,7 +12,7 @@ class MainScreenUseCase @Inject constructor(
 
   suspend fun fetchAccounts() {
     try{
-      contentLoadState.value = ContentLoadState.Loading
+     contentLoadState.value = ContentLoadState.Loading
       repository.fetchAccounts()
     }
     catch (error: Throwable) {
@@ -20,4 +20,16 @@ class MainScreenUseCase @Inject constructor(
     }
   }
   val accounts = repository.accounts
+
+
+  suspend fun fetchDeposits() {
+    try{
+      contentLoadState.value = ContentLoadState.Loading
+      repository.fetchDeposits()
+    }
+    catch (error: Throwable) {
+      contentLoadState.value = ContentLoadState.Error(error)
+    }
+  }
+  val deposits = repository.deposits
 }
