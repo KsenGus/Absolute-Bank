@@ -13,7 +13,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.gks.absolutebank.feature.detail.ui.DetailLayout
 import com.gks.absolutebank.feature.detail.ui.DetailsViewModel
 import com.gks.absolutebank.ui.theme.AbsoluteBankTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)

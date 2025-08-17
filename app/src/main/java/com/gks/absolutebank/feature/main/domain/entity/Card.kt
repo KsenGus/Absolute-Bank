@@ -12,5 +12,5 @@ data class Card(
   val status: String,
 ) {
   @JvmInline
-  value class Id (private val id: String)
+  value class Id (private val id: Int)
 }

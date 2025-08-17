@@ -1,12 +1,22 @@
 package com.gks.absolutebank.feature.main.ui
 
 
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.gks.absolutebank.feature.main.domain.MainScreenUseCase
 import com.gks.absolutebank.feature.main.domain.entity.Account
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainScreenViewModel() : ViewModel() {
+@HiltViewModel
+class MainScreenViewModel @Inject constructor(
+  val useCase: MainScreenUseCase
+) : ViewModel() {
   val state = MutableStateFlow(MainScreenViewState())
 
   fun updateExpansionState(account: Account) {
@@ -19,6 +29,30 @@ class MainScreenViewModel() : ViewModel() {
             )
           } else item
         }
+      )
+    }
+  }
+
+  fun fetchAccounts() {
+    viewModelScope.launch {
+      useCase.fetchAccounts()
+    }
+  }
+
+  fun updateAccounts() {
+    useCase.accounts.onEach { accounts ->
+      state.update {
+        it.copy(
+          accountList = accounts
+        )
+      }
+    }
+  }
+
+  fun updateContentLoadState() {
+    state.update {
+      it.copy(
+        contentLoadState = useCase.contentLoadState.value
       )
     }
   }
