@@ -15,10 +15,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainScreenViewModel @Inject constructor(
-  val useCase: MainScreenUseCase
+  private val useCase: MainScreenUseCase
 ) : ViewModel() {
   val state = MutableStateFlow(MainScreenViewState())
-  val contentLoadState = state.value.contentLoadState
 
   fun updateExpansionState(account: Account) {
     state.update {
