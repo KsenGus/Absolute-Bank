@@ -30,9 +30,9 @@ data object NetworkModule {
   @Provides
   fun provideOkHttp(): OkHttpClient {
     return OkHttpClient.Builder()
-      .connectTimeout(3, TimeUnit.MINUTES)
-      .readTimeout(3, TimeUnit.MINUTES)
-      .writeTimeout(3, TimeUnit.MINUTES)
+      .connectTimeout(1, TimeUnit.MINUTES)
+      .readTimeout(1, TimeUnit.MINUTES)
+      .writeTimeout(1, TimeUnit.MINUTES)
       .apply {
         val loggingInterceptor = HttpLoggingInterceptor { message -> println(message) }
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY

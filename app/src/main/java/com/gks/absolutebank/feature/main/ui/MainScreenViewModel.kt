@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gks.absolutebank.feature.main.domain.MainScreenUseCase
 import com.gks.absolutebank.feature.main.domain.entity.Account
+import com.gks.absolutebank.feature.main.domain.entity.ContentLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.onEach
@@ -17,6 +18,7 @@ class MainScreenViewModel @Inject constructor(
   val useCase: MainScreenUseCase
 ) : ViewModel() {
   val state = MutableStateFlow(MainScreenViewState())
+  val contentLoadState = state.value.contentLoadState
 
   fun updateExpansionState(account: Account) {
     state.update {
@@ -32,13 +34,18 @@ class MainScreenViewModel @Inject constructor(
     }
   }
 
-  fun fetchAccounts() {
-    viewModelScope.launch {
+  private fun fetchAccounts() {
+    try {
+      updateContentLoadState(ContentLoadState.Loading)
       useCase.fetchAccounts()
+      updateContentLoadState(ContentLoadState.Ready)
+    }
+    catch (error: Throwable) {
+      updateContentLoadState(ContentLoadState.Error(error))
     }
   }
 
-  fun updateAccounts() {
+  private fun updateAccounts() {
     useCase.accounts.onEach { accounts ->
       state.update {
         it.copy(
@@ -48,28 +55,40 @@ class MainScreenViewModel @Inject constructor(
     }
   }
 
-  fun fetchDeposits() {
-    viewModelScope.launch {
+  private fun fetchDeposits() {
+    try {
+      updateContentLoadState(ContentLoadState.Loading)
       useCase.fetchDeposits()
+      updateContentLoadState(ContentLoadState.Ready)
+    }
+    catch (error: Throwable) {
+      updateContentLoadState(ContentLoadState.Error(error))
     }
   }
 
-  fun updateDeposits() {
-    useCase.accounts.onEach { deposits ->
+  private fun updateDeposits() {
+    useCase.deposits.onEach { deposits ->
       state.update {
         it.copy(
-          accountList = deposits
+          depositList = deposits
         )
       }
     }
   }
 
-  fun updateContentLoadState() {
+  private fun updateContentLoadState(newContentLoadState: ContentLoadState) {
     state.update {
       it.copy(
-        contentLoadState = useCase.contentLoadState.value
+        contentLoadState = newContentLoadState
       )
     }
+  }
+
+  fun fetchInitialData() {
+    fetchAccounts()
+    updateAccounts()
+    fetchDeposits()
+    updateDeposits()
   }
 }
 

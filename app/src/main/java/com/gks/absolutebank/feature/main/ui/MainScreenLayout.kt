@@ -40,11 +40,7 @@ fun MainScreenLayout(
   val state = viewModel.state.collectAsState(MainScreenViewState())
 
   LaunchedEffect(Unit) {
-    viewModel.fetchAccounts()
-    viewModel.fetchDeposits()
-    viewModel.updateAccounts()
-    viewModel.updateDeposits()
-    viewModel.updateContentLoadState()
+    viewModel.fetchInitialData()
   }
 
   Column(

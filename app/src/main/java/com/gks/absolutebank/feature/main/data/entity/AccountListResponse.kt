@@ -1,9 +1,13 @@
 package com.gks.absolutebank.feature.main.data.entity
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class AccountListResponse (
   val accounts: List<AccountData>
 )
 
+@Serializable
 data class AccountData(
   val accountId: Int,
   val number: String,
@@ -13,6 +17,7 @@ data class AccountData(
   val cards: List<CardData>
 )
 
+@Serializable
 data class CardData(
   val card_id: Int,
   val number: String,

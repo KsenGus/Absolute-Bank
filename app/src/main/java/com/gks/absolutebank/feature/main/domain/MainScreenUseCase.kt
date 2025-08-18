@@ -1,35 +1,29 @@
 package com.gks.absolutebank.feature.main.domain
 
-import com.gks.absolutebank.feature.main.domain.entity.ContentLoadState
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MainScreenUseCase @Inject constructor(
-  private val repository: MainScreenRepository
-)
-{
-  val contentLoadState = MutableStateFlow<ContentLoadState>(ContentLoadState.NotStarted)
 
-  suspend fun fetchAccounts() {
-    try{
-     contentLoadState.value = ContentLoadState.Loading
-      repository.fetchAccounts()
-    }
-    catch (error: Throwable) {
-      contentLoadState.value = ContentLoadState.Error(error)
+class MainScreenUseCase @Inject constructor(
+  private val repository: MainScreenRepository,
+  private val scope: CoroutineScope
+) {
+
+  fun fetchAccounts() {
+    scope.launch {
+        repository.fetchAccounts()
     }
   }
+
   val accounts = repository.accounts
 
 
-  suspend fun fetchDeposits() {
-    try{
-      contentLoadState.value = ContentLoadState.Loading
-      repository.fetchDeposits()
-    }
-    catch (error: Throwable) {
-      contentLoadState.value = ContentLoadState.Error(error)
+  fun fetchDeposits() {
+    scope.launch {
+        repository.fetchDeposits()
     }
   }
+
   val deposits = repository.deposits
 }

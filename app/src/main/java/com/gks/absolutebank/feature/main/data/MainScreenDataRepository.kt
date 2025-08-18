@@ -1,6 +1,7 @@
 package com.gks.absolutebank.feature.main.data
 
 import com.gks.absolutebank.api.AbsoluteBankApi
+import com.gks.absolutebank.feature.main.data.entity.AccountData
 import com.gks.absolutebank.feature.main.data.mappers.toDomainModel
 import com.gks.absolutebank.feature.main.domain.MainScreenRepository
 import com.gks.absolutebank.feature.main.domain.entity.Account
