@@ -25,7 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.gks.absolutebank.CardId
 import com.gks.absolutebank.R
+import com.gks.absolutebank.feature.main.domain.entity.Card
 import com.gks.absolutebank.feature.main.ui.MainScreenViewModel
 import com.gks.absolutebank.feature.main.ui.MainScreenViewState
 import com.gks.absolutebank.feature.main.ui.mappers.getCurrencySign
@@ -34,7 +36,8 @@ import com.gks.absolutebank.ui.theme.Typography
 
 @Composable
 fun MainScreenLayout(
-  viewModel: MainScreenViewModel
+  viewModel: MainScreenViewModel,
+  onCardClick: (cardId: Int) -> Unit
 ) {
 
   val state = viewModel.state.collectAsState(MainScreenViewState())
@@ -96,7 +99,8 @@ fun MainScreenLayout(
             CardLayout(
               number = it.number,
               status = it.status,
-              paymentSystem = it.paymentSystem
+              paymentSystem = it.paymentSystem,
+              onCardClick = { onCardClick(0) }
             )
             if(i != account.cards.lastIndex)
               HorizontalDivider(

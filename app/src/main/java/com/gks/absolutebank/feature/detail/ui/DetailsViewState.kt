@@ -7,7 +7,7 @@ import com.gks.absolutebank.feature.detail.domain.entity.Tabs
 data class DetailsViewState (
   val cardList: List<Card> = listOf(
     Card(
-      id = Card.Id("sfjdkf3805e"),
+      id = Card.Id(0),
       number = "3642892300",
       cardType = "debit",
       status = "Активна",
@@ -18,7 +18,7 @@ data class DetailsViewState (
       currency = "USD"
     ),
     Card(
-      id = Card.Id("sfjdkf3805e"),
+      id = Card.Id(1),
       number = "364890908800",
       cardType = "debit",
       status = "Заблокирована",

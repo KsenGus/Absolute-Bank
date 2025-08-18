@@ -1,6 +1,7 @@
 package com.gks.absolutebank.feature.detail.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -30,7 +31,9 @@ import com.gks.absolutebank.ui.theme.Typography
 @Composable
 fun DetailLayout(
   modifier: Modifier = Modifier,
-  viewModel: DetailsViewModel
+  viewModel: DetailsViewModel,
+  onBackClick: ()->Unit,
+  id: Int
 ) {
 
 val state = viewModel.state.collectAsState(DetailsViewState())
@@ -50,6 +53,9 @@ val state = viewModel.state.collectAsState(DetailsViewState())
         .padding(horizontal = 16.dp, vertical = 10.dp),
     ) {
       Icon(
+        modifier = Modifier.clickable(
+          onClick = onBackClick
+        ),
         painter = painterResource(R.drawable.ic_left_24),
         contentDescription = null,
         tint = MaterialTheme.colorScheme.onTertiary
