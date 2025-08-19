@@ -8,11 +8,14 @@ import retrofit2.http.Headers
 
 interface AbsoluteBankApi{
   @Headers(
-    "Bearer: 123"
+    "Authorization: Bearer 123"
   )
   @GET ("api/core/account/list")
   suspend fun fetchAccountList(): AccountListResponse
 
+  @Headers(
+    "Authorization: Bearer 123"
+  )
   @GET ("api/core/deposit/list")
   suspend fun fetchDepositList(): DepositListResponse
 }

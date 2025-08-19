@@ -39,7 +39,7 @@ internal fun DepositLayout(
     Box(
       modifier = Modifier
         .background(
-          color = MaterialTheme.colorScheme.primary,
+          color = MaterialTheme.colorScheme.secondaryContainer,
           shape = RoundedCornerShape(999.dp)
         )
         .size(40.dp),

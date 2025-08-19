@@ -19,7 +19,7 @@ data class AccountData(
 
 @Serializable
 data class CardData(
-  val card_id: Int,
+  val card_id: String,
   val number: String,
   val status: String,
   val name: String,
