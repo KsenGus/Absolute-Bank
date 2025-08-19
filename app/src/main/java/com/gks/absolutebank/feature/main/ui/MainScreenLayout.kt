@@ -64,7 +64,7 @@ fun MainScreenLayout(
     Spacer(modifier = Modifier.height(11.dp))
     when(state.value.contentLoadState) {
       ContentLoadState.NotStarted, ContentLoadState.Loading -> SkeletonLayout()
-      ContentLoadState.Ready -> /*LazyColumn(
+      ContentLoadState.Ready -> LazyColumn(
         modifier = Modifier
           .background(
             color = MaterialTheme.colorScheme.secondary
@@ -144,7 +144,7 @@ fun MainScreenLayout(
                 .padding(start = 72.dp, end = 16.dp),
               color = MaterialTheme.colorScheme.secondaryContainer)
         }
-      }*/ SkeletonLayout()
+      }
       is ContentLoadState.Error -> ErrorLayout()
     }
 
