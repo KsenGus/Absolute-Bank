@@ -7,6 +7,7 @@ import com.gks.absolutebank.feature.main.domain.entity.Account
 import com.gks.absolutebank.feature.main.domain.entity.ContentLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
@@ -32,23 +33,29 @@ class MainScreenViewModel @Inject constructor(
   }
 
   private fun fetchAccounts() {
-    try {
-      updateContentLoadState(ContentLoadState.Loading)
-      useCase.fetchAccounts()
-      updateContentLoadState(ContentLoadState.Ready)
-    }
-    catch (error: Throwable) {
-      updateContentLoadState(ContentLoadState.Error(error))
+    viewModelScope.launch {
+      try {
+        updateContentLoadState(ContentLoadState.Loading)
+        useCase.fetchAccounts()
+        println("hell0")
+        updateContentLoadState(ContentLoadState.Ready)
+      } catch (error: Throwable) {
+        error.printStackTrace()
+        println("hell0")
+        updateContentLoadState(ContentLoadState.Error(error))
+      }
     }
   }
 
   private fun updateAccounts() {
-    useCase.accounts.onEach { accounts ->
-      state.update {
-        it.copy(
-          accountList = accounts
-        )
-      }
+    viewModelScope.launch {
+      useCase.accounts.onEach { accounts ->
+        state.update {
+          it.copy(
+            accountList = accounts
+          )
+        }
+      }.launchIn(this)
     }
   }
 
@@ -64,12 +71,14 @@ class MainScreenViewModel @Inject constructor(
   }
 
   private fun updateDeposits() {
-    useCase.deposits.onEach { deposits ->
-      state.update {
-        it.copy(
-          depositList = deposits
-        )
-      }
+    viewModelScope.launch {
+      useCase.deposits.onEach { deposits ->
+        state.update {
+          it.copy(
+            depositList = deposits
+          )
+        }
+      }.launchIn(this)
     }
   }
 

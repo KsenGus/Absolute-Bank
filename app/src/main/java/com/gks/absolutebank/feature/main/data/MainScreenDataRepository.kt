@@ -19,6 +19,7 @@ class MainScreenDataRepository @Inject constructor(
   override suspend fun fetchAccounts() {
     val response = api.fetchAccountList()
     accountsCache.value = response.accounts.map { it.toDomainModel() }
+    println("hello" + accountsCache)
   }
 
   override suspend fun fetchDeposits() {
