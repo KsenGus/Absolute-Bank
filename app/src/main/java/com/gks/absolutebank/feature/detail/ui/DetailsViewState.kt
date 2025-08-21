@@ -1,34 +1,18 @@
 package com.gks.absolutebank.feature.detail.ui
 
-import com.gks.absolutebank.feature.detail.domain.entity.Card
 import com.gks.absolutebank.feature.detail.domain.entity.CardActions
 import com.gks.absolutebank.feature.detail.domain.entity.Tabs
+import com.gks.absolutebank.feature.main.domain.entity.Account
+import com.gks.absolutebank.feature.main.domain.entity.Card
+import com.gks.absolutebank.feature.main.domain.entity.CardDetails
+import com.gks.absolutebank.feature.main.domain.entity.ContentLoadState
 
 data class DetailsViewState (
-  val cardList: List<Card> = listOf(
-    Card(
-      id = Card.Id(0),
-      number = "3642892300",
-      cardType = "debit",
-      status = "Активна",
-      paymentSystem = "VISA",
-      name = "Карта зарплатная",
-      expiredAt = "05/22",
-      balance = 145.00,
-      currency = "USD"
-    ),
-    Card(
-      id = Card.Id(1),
-      number = "364890908800",
-      cardType = "debit",
-      status = "Заблокирована",
-      paymentSystem = "MASTER",
-      name = "Карта",
-      expiredAt = "02/29",
-      balance = 4589.80,
-      currency = "USD"
-    )
-  ),
+  val cardList: List<Card> = emptyList(),
+  val accountList: List<Account> = emptyList(),
+  val activeAccount: Account? = null,
+  val cardDetails: CardDetails? = null,
+  val contentLoadState: ContentLoadState = ContentLoadState.NotStarted,
   val blockedCardActions: List<CardActions> = listOf(
     CardActions.RENAME,
     CardActions.REQUISITES,

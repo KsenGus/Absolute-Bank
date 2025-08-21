@@ -15,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -32,12 +33,19 @@ import com.gks.absolutebank.ui.theme.Typography
 fun DetailLayout(
   modifier: Modifier = Modifier,
   viewModel: DetailsViewModel,
-  onBackClick: ()->Unit,
+  onBackClick: () -> Unit,
   id: Int
 ) {
 
-val state = viewModel.state.collectAsState(DetailsViewState())
-  val pagerState = rememberPagerState(pageCount = {state.value.cardList.size })
+  val state = viewModel.state.collectAsState(DetailsViewState())
+  val pagerState = rememberPagerState(
+    pageCount = { state.value.cardList.size },
+    initialPage = id
+  )
+
+  LaunchedEffect(Unit) {
+    viewModel.fetchInitialData(id)
+  }
 
   Column(
     modifier = modifier
@@ -48,8 +56,8 @@ val state = viewModel.state.collectAsState(DetailsViewState())
       .fillMaxHeight()
   ) {
     Row(
-      modifier = Modifier.
-      fillMaxWidth()
+      modifier = Modifier
+        .fillMaxWidth()
         .padding(horizontal = 16.dp, vertical = 10.dp),
     ) {
       Icon(
@@ -71,18 +79,28 @@ val state = viewModel.state.collectAsState(DetailsViewState())
     HorizontalPager(
       state = pagerState,
       contentPadding = PaddingValues(vertical = 24.dp, horizontal = 64.dp),
-      pageSpacing = 8.dp
+      pageSpacing = 8.dp,
+
     ) { page ->
-      val card = state.value.cardList[page]
-      CardLayout(
-        name = card.name,
-        number = card.number,
-        isActive = page == pagerState.currentPage,
-        text = if(card.status == CARD_STATUS_ACTIVE) stringResource(R.string.balance_string, card.balance, card.currency) else card.status,
-        textColor = if(card.status == CARD_STATUS_ACTIVE) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onError,
-        paymentSystemImg = if(card.paymentSystem == VISA_PAYMENT_SYSTEM)  R.drawable.ic_visa_16_6 else R.drawable.ic_mastercard_16_12,
-        expiresAt = card.expiredAt
-      )
+      LaunchedEffect(Unit) {
+        viewModel.fetchData(id = page)
+      }
+      val activeCard = state.value.cardDetails
+      val activeAccount = state.value.activeAccount
+      if (activeCard != null && activeAccount != null)
+        CardLayout(
+          name = activeCard.name,
+          number = activeCard.number,
+          isActive = page == pagerState.currentPage,
+          text = if (activeCard.status == CARD_STATUS_ACTIVE) stringResource(
+            R.string.balance_string,
+            activeAccount.balance,
+            activeAccount.currency
+          ) else activeCard.status,
+          textColor = if (activeCard.status == CARD_STATUS_ACTIVE) MaterialTheme.colorScheme.onTertiary else MaterialTheme.colorScheme.onError,
+          paymentSystemImg = if (activeCard.paymentSystem == VISA_PAYMENT_SYSTEM) R.drawable.ic_visa_16_6 else R.drawable.ic_mastercard_16_12,
+          expiresAt = activeCard.expiredAt
+        )
     }
     PageIndicator(state.value.cardList.size, pagerState.currentPage)
     Tabs(
@@ -91,7 +109,7 @@ val state = viewModel.state.collectAsState(DetailsViewState())
       onTabClick = { tab -> viewModel.updateActiveTab(tab) }
     )
     ActionsLayout(
-      actionsList = if(state.value.cardList[pagerState.currentPage].status == CARD_STATUS_ACTIVE) state.value.activeCardActions else state.value.blockedCardActions
+      actionsList = if (state.value.cardList[pagerState.currentPage].status == CARD_STATUS_ACTIVE) state.value.activeCardActions else state.value.blockedCardActions
     )
   }
 }

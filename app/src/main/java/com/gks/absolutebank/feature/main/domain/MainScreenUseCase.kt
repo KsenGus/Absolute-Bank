@@ -1,6 +1,7 @@
 package com.gks.absolutebank.feature.main.domain
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.ThreadLocalRandom
 import javax.inject.Inject
@@ -11,16 +12,16 @@ class MainScreenUseCase @Inject constructor(
   private val scope: CoroutineScope
 ) {
 
-  suspend fun fetchAccounts() {
-//    scope.launch {
-//      runCatching {
+  val errorFlow = MutableSharedFlow<Throwable>()
+  fun fetchAccounts() {
+    scope.launch {
+     try {
         repository.fetchAccounts()
-        println("hello" + repository.accounts)
-//      }
-//        .onFailure {
-//          throw it
-//        }
-//    }
+      }
+      catch (error: Throwable) {
+         errorFlow.emit(error)
+       }
+    }
   }
 
   val accounts = repository.accounts
@@ -28,9 +29,27 @@ class MainScreenUseCase @Inject constructor(
 
   fun fetchDeposits() {
     scope.launch {
+      try {
         repository.fetchDeposits()
+      }
+       catch (error: Throwable) {
+         errorFlow.emit(error)
+       }
+    }
+  }
+
+  fun fetchCardData(id: Int) {
+    scope.launch {
+      try {
+        repository.fetchCardData(id)
+      }
+      catch (error: Throwable) {
+        errorFlow.emit(error)
+      }
     }
   }
 
   val deposits = repository.deposits
+
+  val cardDetails = repository.cardDetails
 }

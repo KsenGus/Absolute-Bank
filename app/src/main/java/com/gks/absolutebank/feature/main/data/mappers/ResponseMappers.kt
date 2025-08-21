@@ -2,9 +2,11 @@ package com.gks.absolutebank.feature.main.data.mappers
 
 import com.gks.absolutebank.feature.main.data.entity.AccountData
 import com.gks.absolutebank.feature.main.data.entity.CardData
+import com.gks.absolutebank.feature.main.data.entity.CardDetailsResponse
 import com.gks.absolutebank.feature.main.data.entity.DepositData
 import com.gks.absolutebank.feature.main.domain.entity.Account
 import com.gks.absolutebank.feature.main.domain.entity.Card
+import com.gks.absolutebank.feature.main.domain.entity.CardDetails
 import com.gks.absolutebank.feature.main.domain.entity.Deposit
 
 internal fun AccountData.toDomainModel() : Account {
@@ -37,5 +39,17 @@ internal fun DepositData.toDomainModel() : Deposit {
     currency = currency,
     status = status,
     name = name
+  )
+}
+
+internal fun CardDetailsResponse.toDomainModel(): CardDetails {
+  return CardDetails(
+    id = id,
+    number = number,
+    name = name,
+    paymentSystem = paymentSystem,
+    status = status,
+    accountId = accountId,
+    expiredAt = expiredAt
   )
 }

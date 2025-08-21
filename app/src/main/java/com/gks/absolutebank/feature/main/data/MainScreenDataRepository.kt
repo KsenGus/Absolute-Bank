@@ -5,9 +5,12 @@ import com.gks.absolutebank.feature.main.data.entity.AccountData
 import com.gks.absolutebank.feature.main.data.mappers.toDomainModel
 import com.gks.absolutebank.feature.main.domain.MainScreenRepository
 import com.gks.absolutebank.feature.main.domain.entity.Account
+import com.gks.absolutebank.feature.main.domain.entity.Card
+import com.gks.absolutebank.feature.main.domain.entity.CardDetails
 import com.gks.absolutebank.feature.main.domain.entity.Deposit
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.emptyFlow
 import javax.inject.Inject
 
 class MainScreenDataRepository @Inject constructor(
@@ -15,6 +18,7 @@ class MainScreenDataRepository @Inject constructor(
 ): MainScreenRepository {
   private val accountsCache = MutableStateFlow<List<Account>>(emptyList())
   private val depositsCache = MutableStateFlow<List<Deposit>>(emptyList())
+  private val cardDetailsCache = MutableStateFlow<CardDetails?>(null)
 
   override suspend fun fetchAccounts() {
     val response = api.fetchAccountList()
@@ -27,6 +31,12 @@ class MainScreenDataRepository @Inject constructor(
     depositsCache.value = response.deposits.map { it.toDomainModel() }
   }
 
+  override suspend fun fetchCardData(id: Int) {
+    val response = api.fetchCardData(id)
+    cardDetailsCache.value = response.toDomainModel()
+  }
+
   override val accounts: Flow<List<Account>> = accountsCache
   override val deposits: Flow<List<Deposit>> = depositsCache
+  override val cardDetails: Flow<CardDetails?> = cardDetailsCache
 }

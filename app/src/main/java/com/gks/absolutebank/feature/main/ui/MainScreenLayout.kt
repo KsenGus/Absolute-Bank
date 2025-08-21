@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.gks.absolutebank.CardId
 import com.gks.absolutebank.R
 import com.gks.absolutebank.feature.main.domain.entity.ContentLoadState
 import com.gks.absolutebank.feature.main.ui.MainScreenViewModel
@@ -36,7 +37,8 @@ import com.gks.absolutebank.ui.theme.Typography
 
 @Composable
 fun MainScreenLayout(
-  viewModel: MainScreenViewModel
+  viewModel: MainScreenViewModel,
+  onCardClick: (CardId: Int)->Unit
 ) {
 
   val state = viewModel.state.collectAsState(MainScreenViewState())
@@ -96,11 +98,12 @@ fun MainScreenLayout(
           AnimatedVisibility(
             visible = account.isExpanded
           ) {
-            account.cards.forEach {
+            account.cards.forEachIndexed { i, card->
               CardLayout(
-                number = it.number,
-                status = it.status,
-                paymentSystem = it.paymentSystem
+                number = card.number,
+                status = card.status,
+                paymentSystem = card.paymentSystem,
+                onCardClick = { onCardClick(i) }
               )
               if(i != account.cards.lastIndex)
                 HorizontalDivider(
