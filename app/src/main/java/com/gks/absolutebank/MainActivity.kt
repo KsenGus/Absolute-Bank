@@ -10,10 +10,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.gks.absolutebank.feature.detail.ui.DetailLayout
 import com.gks.absolutebank.feature.detail.ui.DetailsViewModel
+import com.gks.absolutebank.feature.main.ui.MainScreenViewModel
+import com.gks.absolutebank.feature.main1.MainScreenLayout
 import com.gks.absolutebank.ui.theme.AbsoluteBankTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -24,8 +29,8 @@ class MainActivity : ComponentActivity() {
           /*MainScreenLayout(
             viewModel = MainScreenViewModel()
           )*/
-          DetailLayout(
-            viewModel = DetailsViewModel()
+          MainScreenLayout(
+            viewModel = hiltViewModel<MainScreenViewModel>()
           )
         }
       }

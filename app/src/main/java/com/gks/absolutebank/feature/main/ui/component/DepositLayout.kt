@@ -29,8 +29,6 @@ internal fun DepositLayout(
   name: String,
   balance: Double,
   iconResource: Int,
-  term: String,
-  rate: Double,
 ) {
   Row(
     modifier = modifier
@@ -41,7 +39,7 @@ internal fun DepositLayout(
     Box(
       modifier = Modifier
         .background(
-          color = MaterialTheme.colorScheme.primary,
+          color = MaterialTheme.colorScheme.secondaryContainer,
           shape = RoundedCornerShape(999.dp)
         )
         .size(40.dp),
@@ -68,20 +66,6 @@ internal fun DepositLayout(
       )
     }
     Spacer(modifier = Modifier.weight(1f))
-    Column(
-      verticalArrangement = Arrangement.spacedBy(7.dp)
-    ) {
-      Text(
-        text = stringResource(R.string.rate_string, rate.toString()),
-        color = MaterialTheme.colorScheme.tertiary,
-        style = Typography.bodySmall
-      )
-      Text(
-        text = stringResource(R.string.up_to, term),
-        color = MaterialTheme.colorScheme.tertiary,
-        style = Typography.bodySmall
-      )
-    }
   }
 }
 

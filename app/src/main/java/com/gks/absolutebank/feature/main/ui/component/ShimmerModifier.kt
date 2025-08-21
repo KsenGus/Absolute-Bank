@@ -31,8 +31,8 @@ fun Modifier.shimmerBackground(shape: Shape = RectangleShape): Modifier = compos
     ),
   )
   val shimmerColors = listOf(
-    MaterialTheme.colorScheme.surfaceContainerLow,
-    MaterialTheme.colorScheme.surfaceContainerLowest
+    MaterialTheme.colorScheme.secondaryContainer,
+    MaterialTheme.colorScheme.tertiary
   )
   val brush = Brush.linearGradient(
     colors = shimmerColors,

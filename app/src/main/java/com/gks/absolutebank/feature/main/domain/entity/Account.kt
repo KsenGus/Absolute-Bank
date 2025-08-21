@@ -13,5 +13,5 @@ data class Account(
   val isExpanded: Boolean
 ) {
   @JvmInline
-  value class Id (private val id: String)
+  value class Id (private val id: Int)
 }
