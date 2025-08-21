@@ -103,7 +103,9 @@ fun MainScreenLayout(
                 number = card.number,
                 status = card.status,
                 paymentSystem = card.paymentSystem,
-                onCardClick = { onCardClick(i) }
+                onCardClick = {
+                  onCardClick(i)
+                }
               )
               if(i != account.cards.lastIndex)
                 HorizontalDivider(

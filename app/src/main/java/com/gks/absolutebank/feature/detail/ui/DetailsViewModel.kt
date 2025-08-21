@@ -11,6 +11,7 @@ import com.gks.absolutebank.feature.main.domain.entity.ContentLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -19,7 +20,7 @@ import javax.inject.Inject
 @Immutable
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
-  val useCase: MainScreenUseCase
+  private val useCase: MainScreenUseCase
 ) : ViewModel() {
   val state = MutableStateFlow(DetailsViewState())
 
@@ -40,11 +41,20 @@ class DetailsViewModel @Inject constructor(
   }
 
   private fun fetchCardDetails(id: Int) {
-    if (useCase.errorFlow == emptyFlow<Throwable>()) {
-      updateContentLoadState(ContentLoadState.Loading)
-      useCase.fetchCardData(id)
-      updateContentLoadState(ContentLoadState.Ready)
-    } else updateContentLoadState(ContentLoadState.Error(useCase.errorFlow.replayCache.last()))
+    var caughtError: Throwable = Exception()
+    viewModelScope.launch {
+      if (useCase.errorFlow.subscriptionCount.value == 0) {
+        updateContentLoadState(ContentLoadState.Loading)
+        useCase.fetchCardData(id)
+        updateContentLoadState(ContentLoadState.Ready)
+      } else {
+        useCase.errorFlow.onEach { error ->
+          caughtError = error
+        }.launchIn(viewModelScope)
+        updateContentLoadState(ContentLoadState.Error(caughtError))
+        println(caughtError)
+      }
+    }
   }
 
   private fun updateCardDetails() {

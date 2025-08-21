@@ -40,60 +40,76 @@ class MainScreenViewModel @Inject constructor(
   }
 
   private fun fetchAccounts() {
-    if (useCase.errorFlow.replayCache.isEmpty()) {
-      updateContentLoadState(ContentLoadState.Loading)
-    useCase.fetchAccounts()
-    updateContentLoadState(ContentLoadState.Ready)
-  } else updateContentLoadState(ContentLoadState.Error(useCase.errorFlow.replayCache.last()))
-}
-
-private fun updateAccounts() {
-  viewModelScope.launch {
-    useCase.accounts.onEach { accounts ->
-      state.update {
-        it.copy(
-          accountList = accounts
-        )
+    var caughtError: Throwable = Exception()
+    viewModelScope.launch {
+      if (useCase.errorFlow.subscriptionCount.value == 0) {
+        updateContentLoadState(ContentLoadState.Loading)
+        useCase.fetchAccounts()
+        updateContentLoadState(ContentLoadState.Ready)
+      } else {
+        useCase.errorFlow.onEach { error ->
+          caughtError = error
+        }.launchIn(viewModelScope)
+        updateContentLoadState(ContentLoadState.Error(caughtError))
       }
-    }.launchIn(this)
+    }
   }
-}
 
-private fun fetchDeposits() {
-  if (useCase.errorFlow.replayCache.isEmpty()) {
-    updateContentLoadState(ContentLoadState.Loading)
-    useCase.fetchDeposits()
-    updateContentLoadState(ContentLoadState.Ready)
-  } else updateContentLoadState(ContentLoadState.Error(useCase.errorFlow.replayCache.last()))
+  private fun updateAccounts() {
+    viewModelScope.launch {
+      useCase.accounts.onEach { accounts ->
+        state.update {
+          it.copy(
+            accountList = accounts
+          )
+        }
+      }.launchIn(this)
+    }
+  }
 
-}
-
-private fun updateDeposits() {
-  viewModelScope.launch {
-    useCase.deposits.onEach { deposits ->
-      state.update {
-        it.copy(
-          depositList = deposits
-        )
+  private fun fetchDeposits() {
+    var caughtError: Throwable = Exception()
+    viewModelScope.launch {
+      if (useCase.errorFlow.subscriptionCount.value == 0) {
+        updateContentLoadState(ContentLoadState.Loading)
+        useCase.fetchDeposits()
+        updateContentLoadState(ContentLoadState.Ready)
+      } else {
+        useCase.errorFlow.onEach { error ->
+          caughtError = error
+        }.launchIn(viewModelScope)
+        updateContentLoadState(ContentLoadState.Error(caughtError))
+        println(caughtError)
       }
-    }.launchIn(this)
+    }
   }
-}
 
-private fun updateContentLoadState(newContentLoadState: ContentLoadState) {
-  state.update {
-    it.copy(
-      contentLoadState = newContentLoadState
-    )
+  private fun updateDeposits() {
+    viewModelScope.launch {
+      useCase.deposits.onEach { deposits ->
+        state.update {
+          it.copy(
+            depositList = deposits
+          )
+        }
+      }.launchIn(this)
+    }
   }
-}
 
-fun fetchInitialData() {
-  fetchAccounts()
-  updateAccounts()
-  fetchDeposits()
-  updateDeposits()
-}
+  private fun updateContentLoadState(newContentLoadState: ContentLoadState) {
+    state.update {
+      it.copy(
+        contentLoadState = newContentLoadState
+      )
+    }
+  }
+
+  fun fetchInitialData() {
+    fetchAccounts()
+    updateAccounts()
+    fetchDeposits()
+    updateDeposits()
+  }
 }
 
 internal const val VISA_PAYMENT_SYSTEM = "visa"

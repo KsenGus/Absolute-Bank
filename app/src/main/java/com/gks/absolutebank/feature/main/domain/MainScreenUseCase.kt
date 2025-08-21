@@ -2,6 +2,7 @@ package com.gks.absolutebank.feature.main.domain
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.ThreadLocalRandom
 import javax.inject.Inject
