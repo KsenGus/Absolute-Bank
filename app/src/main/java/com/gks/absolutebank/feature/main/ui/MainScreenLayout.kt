@@ -38,7 +38,7 @@ import com.gks.absolutebank.ui.theme.Typography
 @Composable
 fun MainScreenLayout(
   viewModel: MainScreenViewModel,
-  onCardClick: (CardId: Int)->Unit
+  onCardClick: (Int)->Unit
 ) {
 
   val state = viewModel.state.collectAsState(MainScreenViewState())

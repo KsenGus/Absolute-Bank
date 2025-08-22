@@ -36,7 +36,6 @@ fun DetailLayout(
   onBackClick: () -> Unit,
   id: Int
 ) {
-
   val state = viewModel.state.collectAsState(DetailsViewState())
   val pagerState = rememberPagerState(
     pageCount = { state.value.cardList.size },
@@ -81,13 +80,13 @@ fun DetailLayout(
       contentPadding = PaddingValues(vertical = 24.dp, horizontal = 64.dp),
       pageSpacing = 8.dp,
 
-    ) { page ->
+      ) { page ->
       LaunchedEffect(Unit) {
-        viewModel.fetchData(id = page)
+        viewModel.fetchInitialData(page)
       }
       val activeCard = state.value.cardDetails
       val activeAccount = state.value.activeAccount
-      if (activeCard != null && activeAccount != null)
+      if (activeCard != null && activeAccount != null) {
         CardLayout(
           name = activeCard.name,
           number = activeCard.number,
@@ -101,15 +100,19 @@ fun DetailLayout(
           paymentSystemImg = if (activeCard.paymentSystem == VISA_PAYMENT_SYSTEM) R.drawable.ic_visa_16_6 else R.drawable.ic_mastercard_16_12,
           expiresAt = activeCard.expiredAt
         )
+
+      }
     }
-    PageIndicator(state.value.cardList.size, pagerState.currentPage)
-    Tabs(
-      tabs = state.value.tabsList,
-      activeTab = state.value.activeTab,
-      onTabClick = { tab -> viewModel.updateActiveTab(tab) }
-    )
-    ActionsLayout(
-      actionsList = if (state.value.cardList[pagerState.currentPage].status == CARD_STATUS_ACTIVE) state.value.activeCardActions else state.value.blockedCardActions
-    )
+    if (state.value.cardList.isNotEmpty()) {
+      PageIndicator(state.value.cardList.size, pagerState.currentPage)
+      Tabs(
+        tabs = state.value.tabsList,
+        activeTab = state.value.activeTab,
+        onTabClick = { tab -> viewModel.updateActiveTab(tab) }
+      )
+      ActionsLayout(
+        actionsList = if (state.value.cardList[pagerState.currentPage].status == CARD_STATUS_ACTIVE) state.value.activeCardActions else state.value.blockedCardActions
+      )
+    }
   }
 }

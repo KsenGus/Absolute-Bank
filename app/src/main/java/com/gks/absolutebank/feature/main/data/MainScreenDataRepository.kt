@@ -8,6 +8,7 @@ import com.gks.absolutebank.feature.main.domain.entity.Account
 import com.gks.absolutebank.feature.main.domain.entity.Card
 import com.gks.absolutebank.feature.main.domain.entity.CardDetails
 import com.gks.absolutebank.feature.main.domain.entity.Deposit
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.emptyFlow
@@ -21,12 +22,14 @@ class MainScreenDataRepository @Inject constructor(
   private val cardDetailsCache = MutableStateFlow<CardDetails?>(null)
 
   override suspend fun fetchAccounts() {
+    delay(3000)
     val response = api.fetchAccountList()
     accountsCache.value = response.accounts.map { it.toDomainModel() }
     println("hello" + accountsCache)
   }
 
   override suspend fun fetchDeposits() {
+    delay(3000)
     val response = api.fetchDepositList()
     depositsCache.value = response.deposits.map { it.toDomainModel() }
   }

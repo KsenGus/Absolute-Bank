@@ -40,60 +40,35 @@ class MainScreenViewModel @Inject constructor(
   }
 
   private fun fetchAccounts() {
-    var caughtError: Throwable = Exception()
-    viewModelScope.launch {
-      if (useCase.errorFlow.subscriptionCount.value == 0) {
-        updateContentLoadState(ContentLoadState.Loading)
-        useCase.fetchAccounts()
-        updateContentLoadState(ContentLoadState.Ready)
-      } else {
-        useCase.errorFlow.onEach { error ->
-          caughtError = error
-        }.launchIn(viewModelScope)
-        updateContentLoadState(ContentLoadState.Error(caughtError))
-      }
-    }
+    updateContentLoadState(ContentLoadState.Loading)
+    useCase.fetchAccounts()
   }
 
   private fun updateAccounts() {
-    viewModelScope.launch {
-      useCase.accounts.onEach { accounts ->
-        state.update {
-          it.copy(
-            accountList = accounts
-          )
-        }
-      }.launchIn(this)
-    }
+    useCase.accounts.onEach { accounts ->
+      state.update {
+        it.copy(
+          accountList = accounts,
+          contentLoadState = ContentLoadState.Ready
+        )
+      }
+    }.launchIn(viewModelScope)
   }
 
   private fun fetchDeposits() {
-    var caughtError: Throwable = Exception()
-    viewModelScope.launch {
-      if (useCase.errorFlow.subscriptionCount.value == 0) {
-        updateContentLoadState(ContentLoadState.Loading)
-        useCase.fetchDeposits()
-        updateContentLoadState(ContentLoadState.Ready)
-      } else {
-        useCase.errorFlow.onEach { error ->
-          caughtError = error
-        }.launchIn(viewModelScope)
-        updateContentLoadState(ContentLoadState.Error(caughtError))
-        println(caughtError)
-      }
-    }
+    updateContentLoadState(ContentLoadState.Loading)
+    useCase.fetchDeposits()
   }
 
   private fun updateDeposits() {
-    viewModelScope.launch {
-      useCase.deposits.onEach { deposits ->
-        state.update {
-          it.copy(
-            depositList = deposits
-          )
-        }
-      }.launchIn(this)
-    }
+    useCase.deposits.onEach { deposits ->
+      state.update {
+        it.copy(
+          depositList = deposits,
+          contentLoadState = ContentLoadState.Ready
+        )
+      }
+    }.launchIn(viewModelScope)
   }
 
   private fun updateContentLoadState(newContentLoadState: ContentLoadState) {
@@ -104,11 +79,20 @@ class MainScreenViewModel @Inject constructor(
     }
   }
 
+  private fun observeError() {
+    useCase.errorFlow
+      .onEach { error ->
+        updateContentLoadState(ContentLoadState.Error(error))
+      }
+      .launchIn(viewModelScope)
+  }
+
   fun fetchInitialData() {
     fetchAccounts()
     updateAccounts()
     fetchDeposits()
     updateDeposits()
+    observeError()
   }
 }
 

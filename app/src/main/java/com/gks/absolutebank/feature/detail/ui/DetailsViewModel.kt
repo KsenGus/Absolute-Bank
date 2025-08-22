@@ -10,7 +10,9 @@ import com.gks.absolutebank.feature.main.domain.entity.Account
 import com.gks.absolutebank.feature.main.domain.entity.ContentLoadState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -40,63 +42,57 @@ class DetailsViewModel @Inject constructor(
     }
   }
 
-  private fun fetchCardDetails(id: Int) {
-    var caughtError: Throwable = Exception()
+  fun fetchCardDetails(id: Int) {
     viewModelScope.launch {
-      if (useCase.errorFlow.subscriptionCount.value == 0) {
-        updateContentLoadState(ContentLoadState.Loading)
-        useCase.fetchCardData(id)
-        updateContentLoadState(ContentLoadState.Ready)
-      } else {
-        useCase.errorFlow.onEach { error ->
-          caughtError = error
-        }.launchIn(viewModelScope)
-        updateContentLoadState(ContentLoadState.Error(caughtError))
-        println(caughtError)
-      }
+      updateContentLoadState(ContentLoadState.Loading)
+      useCase.fetchCardData(id)
+      updateContentLoadState(ContentLoadState.Ready)
     }
   }
 
-  private fun updateCardDetails() {
-    useCase.cardDetails.onEach { card ->
+  private fun observeError() {
+    useCase.errorFlow
+      .onEach { error ->
+        updateContentLoadState(ContentLoadState.Error(error))
+      }
+      .launchIn(viewModelScope)
+  }
+
+  fun fetchAccounts() {
+    viewModelScope.launch {
+      updateContentLoadState(ContentLoadState.Loading)
+      useCase.fetchAccounts()
+      updateContentLoadState(ContentLoadState.Ready)
+    }
+  }
+
+  fun getActiveAccount() {
+    combine(
+      useCase.accounts,
+      useCase.cardDetails.filterNotNull(),
+      ::Pair
+    ).onEach { (accounts, cardDetails) ->
       state.update {
+        val activeAccount = accounts.find { account ->
+          account.id.id == cardDetails.accountId
+        }
         it.copy(
-          cardDetails = card
+          cardDetails = cardDetails,
+          activeAccount = activeAccount,
+          cardList = activeAccount?.cards.orEmpty()
         )
       }
+      println("helllo" + state.value.cardList)
     }
+      .launchIn(viewModelScope)
   }
 
-
-  private fun getActiveAccount() {
-    useCase.accounts.onEach { accounts ->
-      state.update {
-        it.copy(
-          activeAccount = accounts.find {
-            it.id.id == state.value.cardDetails!!.accountId }
-        )
-      }
-    }
-  }
-
-  private fun getCardList() {
-    state.update {
-      it.copy(
-        cardList = state.value.activeAccount!!.cards
-      )
-    }
-  }
 
   fun fetchInitialData(id: Int) {
     fetchCardDetails(id)
-    updateCardDetails()
+    fetchAccounts()
     getActiveAccount()
-    getCardList()
-  }
-
-  fun fetchData(id: Int) {
-    fetchCardDetails(id)
-    updateCardDetails()
+    observeError()
   }
 }
 
