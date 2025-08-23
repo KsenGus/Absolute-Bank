@@ -10,5 +10,6 @@ import com.gks.absolutebank.feature.main.domain.entity.Deposit
 data class MainScreenViewState(
   val accountList: List<Account> = emptyList(),
   val depositList: List<Deposit> = emptyList(),
-  val contentLoadState: ContentLoadState = ContentLoadState.NotStarted
+  val contentLoadState: ContentLoadState = ContentLoadState.NotStarted,
+  val isRefreshing: Boolean = false
 )

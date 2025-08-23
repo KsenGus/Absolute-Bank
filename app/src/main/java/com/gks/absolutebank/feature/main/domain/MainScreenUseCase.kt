@@ -1,6 +1,8 @@
 package com.gks.absolutebank.feature.main.domain
 
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.launch
@@ -14,6 +16,9 @@ class MainScreenUseCase @Inject constructor(
 ) {
 
   val errorFlow = MutableSharedFlow<Throwable>()
+  val refreshing = MutableSharedFlow<Boolean>()
+  val loading = MutableSharedFlow<Boolean>()
+
   fun fetchAccounts() {
     scope.launch {
      try {
@@ -46,6 +51,51 @@ class MainScreenUseCase @Inject constructor(
       }
       catch (error: Throwable) {
         errorFlow.emit(error)
+      }
+    }
+  }
+
+  fun refresh() {
+    scope.launch {
+      try {
+        refreshing.emit(true)
+        val accounts = scope.async {
+          repository.fetchAccounts()
+        }
+        val deposits = scope.async {
+          repository.fetchDeposits()
+        }
+        accounts.await()
+        deposits.await()
+      }
+      catch (error: Throwable) {
+        errorFlow.emit(error)
+      }
+      finally {
+        refreshing.emit(false)
+      }
+    }
+  }
+
+  fun load() {
+    scope.launch {
+      try {
+        loading.emit(true)
+        val accounts = scope.async {
+          repository.fetchAccounts()
+        }
+        val deposits = scope.async {
+          repository.fetchDeposits()
+        }
+        accounts.await()
+        deposits.await()
+        loading.emit(false)
+      }
+      catch (error: Throwable) {
+        errorFlow.emit(error)
+      }
+      finally {
+        loading.emit(false)
       }
     }
   }
