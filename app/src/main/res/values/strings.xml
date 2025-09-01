@@ -19,4 +19,5 @@
     <string name="unblock">Разблокировать карту</string>
     <string name="blocked">Заблокирована</string>
     <string name="active">Активна</string>
+    <string name="something_went_wrong">Что-то пошло не так</string>
 </resources>

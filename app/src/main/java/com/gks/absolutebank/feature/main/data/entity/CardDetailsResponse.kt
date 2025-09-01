@@ -1,9 +1,9 @@
-package com.gks.absolutebank.feature.main.domain.entity
+package com.gks.absolutebank.feature.main.data.entity
 
-import androidx.compose.runtime.Immutable
+import kotlinx.serialization.Serializable
 
-@Immutable
-data class CardDetails(
+@Serializable
+data class CardDetailsResponse(
   val id: Int,
   val accountId: Int,
   val number: String,

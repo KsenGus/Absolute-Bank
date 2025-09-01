@@ -15,129 +15,155 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.gks.absolutebank.CardId
 import com.gks.absolutebank.R
+import com.gks.absolutebank.feature.main.domain.entity.ContentLoadState
 import com.gks.absolutebank.feature.main.ui.MainScreenViewModel
 import com.gks.absolutebank.feature.main.ui.MainScreenViewState
+import com.gks.absolutebank.feature.main.ui.component.ErrorLayout
+import com.gks.absolutebank.feature.main.ui.component.PullToRefresh
 import com.gks.absolutebank.feature.main.ui.mappers.getCurrencySign
 import com.gks.absolutebank.feature.main.ui.mappers.getIcon
 import com.gks.absolutebank.ui.theme.Typography
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenLayout(
-  viewModel: MainScreenViewModel
+  viewModel: MainScreenViewModel,
+  onCardClick: (Int)->Unit
 ) {
 
   val state = viewModel.state.collectAsState(MainScreenViewState())
+  val pullToRefreshState = rememberPullToRefreshState()
 
-  Column(
-    modifier = Modifier
-      .background(
-        color = MaterialTheme.colorScheme.primary
-      )
-      .fillMaxHeight()
-      .systemBarsPadding()
-  ) {
-    Spacer(modifier = Modifier.height(11.dp))
-    Text(
-      modifier = Modifier.fillMaxWidth(),
-      text = stringResource(R.string.main),
-      color = MaterialTheme.colorScheme.onTertiary,
-      style = Typography.titleLarge,
-      textAlign = TextAlign.Center
-    )
-    Spacer(modifier = Modifier.height(11.dp))
-    LazyColumn(
+  LaunchedEffect(Unit) {
+    viewModel.fetchInitialData()
+  }
+
+  PullToRefresh(
+    isRefreshing = state.value.isRefreshing,
+    onRefresh = { viewModel.onPullToRefreshTrigger() },
+    content = { Column(
       modifier = Modifier
         .background(
-          color = MaterialTheme.colorScheme.secondary
+          color = MaterialTheme.colorScheme.primary
         )
+        .fillMaxHeight()
+        .systemBarsPadding()
     ) {
-      item {
-        Text(
+      Spacer(modifier = Modifier.height(11.dp))
+      Text(
+        modifier = Modifier.fillMaxWidth(),
+        text = stringResource(R.string.main),
+        color = MaterialTheme.colorScheme.onTertiary,
+        style = Typography.titleLarge,
+        textAlign = TextAlign.Center
+      )
+      Spacer(modifier = Modifier.height(11.dp))
+      when(state.value.contentLoadState) {
+        ContentLoadState.NotStarted, ContentLoadState.Loading -> SkeletonLayout()
+        ContentLoadState.Ready -> LazyColumn(
           modifier = Modifier
-            .padding(16.dp),
-          text = stringResource(R.string.accounts),
-          color = MaterialTheme.colorScheme.tertiary
-        )
-      }
-      itemsIndexed(state.value.accountList) { i, account ->
-        AccountLayout(
-         currency = getCurrencySign(account.currency),
-          number = account.number,
-          balance = account.balance,
-          iconResource = getIcon(account.currency),
-          onExpandClick = {
-            viewModel.updateExpansionState(account)
-          },
-          rotation = animateFloatAsState(
-              targetValue = if (account.isExpanded) 0f else 180f,
-          animationSpec = tween(durationMillis = 200, easing = LinearEasing),
-          label = "rotation"
-        ).value
-        )
-        AnimatedVisibility(
-          visible = account.isExpanded
-        ) {
-          account.cards.forEach {
-            CardLayout(
-              number = it.number,
-              status = it.status,
-              paymentSystem = it.paymentSystem
+            .background(
+              color = MaterialTheme.colorScheme.secondary
             )
-            if(i != account.cards.lastIndex)
+        ) {
+          item {
+            Text(
+              modifier = Modifier
+                .padding(16.dp),
+              text = stringResource(R.string.accounts),
+              color = MaterialTheme.colorScheme.tertiary
+            )
+          }
+          itemsIndexed(state.value.accountList) { i, account ->
+            AccountLayout(
+              currency = getCurrencySign(account.currency),
+              number = account.number,
+              balance = account.balance,
+              iconResource = getIcon(account.currency),
+              onExpandClick = {
+                viewModel.updateExpansionState(account)
+              },
+              rotation = animateFloatAsState(
+                targetValue = if (account.isExpanded) 0f else 180f,
+                animationSpec = tween(durationMillis = 200, easing = LinearEasing),
+                label = "rotation"
+              ).value
+            )
+            AnimatedVisibility(
+              visible = account.isExpanded
+            ) {
+              account.cards.forEachIndexed { i, card->
+                CardLayout(
+                  number = card.number,
+                  status = card.status,
+                  paymentSystem = card.paymentSystem,
+                  onCardClick = {
+                    onCardClick(i)
+                  }
+                )
+                if(i != account.cards.lastIndex)
+                  HorizontalDivider(
+                    modifier = Modifier
+                      .padding(start = 72.dp, end = 16.dp),
+                    color = MaterialTheme.colorScheme.secondaryContainer)
+              }
+            }
+            if(i != state.value.accountList.lastIndex)
+              HorizontalDivider(
+                modifier = Modifier
+                  .padding(start = 72.dp, end = 16.dp),
+                color = MaterialTheme.colorScheme.secondaryContainer)
+          }
+          item {
+            Box(
+              modifier = Modifier
+                .background(color = MaterialTheme.colorScheme.primary)
+                .fillMaxWidth()
+                .height(16.dp)
+            )
+          }
+          item {
+            Text(
+              modifier = Modifier
+                .padding(16.dp),
+              text = stringResource(R.string.deposits),
+              color = MaterialTheme.colorScheme.tertiary
+            )
+          }
+          itemsIndexed(state.value.depositList) { i, deposit ->
+            DepositLayout(
+              currency = getCurrencySign(deposit.currency),
+              name = deposit.name,
+              balance = deposit.balance,
+              iconResource = getIcon(deposit.currency),
+            )
+            if(i != state.value.depositList.size - 1)
               HorizontalDivider(
                 modifier = Modifier
                   .padding(start = 72.dp, end = 16.dp),
                 color = MaterialTheme.colorScheme.secondaryContainer)
           }
         }
-        if(i != state.value.accountList.lastIndex)
-          HorizontalDivider(
-            modifier = Modifier
-              .padding(start = 72.dp, end = 16.dp),
-            color = MaterialTheme.colorScheme.secondaryContainer)
+        is ContentLoadState.Error -> ErrorLayout()
       }
-      item {
-        Box(
-          modifier = Modifier
-            .background(color = MaterialTheme.colorScheme.primary)
-            .fillMaxWidth()
-            .height(16.dp)
-        )
-      }
-      item {
-        Text(
-          modifier = Modifier
-            .padding(16.dp),
-          text = stringResource(R.string.deposits),
-          color = MaterialTheme.colorScheme.tertiary
-        )
-      }
-      itemsIndexed(state.value.depositList) { i, deposit ->
-        DepositLayout(
-          currency = getCurrencySign(deposit.currency),
-          name = deposit.name,
-          balance = deposit.balance,
-          iconResource = getIcon(deposit.currency),
-          rate = deposit.rate,
-          term = deposit.term
-        )
-        if(i != state.value.depositList.size - 1)
-          HorizontalDivider(
-            modifier = Modifier
-              .padding(start = 72.dp, end = 16.dp),
-            color = MaterialTheme.colorScheme.secondaryContainer)
-      }
-    }
-  }
+
+    } }
+  )
+
+
 }
 

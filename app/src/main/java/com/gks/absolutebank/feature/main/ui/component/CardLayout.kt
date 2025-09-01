@@ -1,6 +1,7 @@
 package com.gks.absolutebank.feature.main1
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,10 +32,14 @@ internal fun CardLayout(
   modifier: Modifier = Modifier,
   number: String,
   status: String,
-  paymentSystem: String
+  paymentSystem: String,
+  onCardClick: ()->Unit
 ) {
   Row(
     modifier = modifier
+      .clickable(
+        onClick = onCardClick
+      )
       .padding(16.dp)
       .fillMaxWidth(),
     horizontalArrangement = Arrangement.spacedBy(16.dp)

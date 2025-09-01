@@ -13,5 +13,18 @@ data class Account(
   val isExpanded: Boolean
 ) {
   @JvmInline
+  value class Id (val id: Int)
+}
+
+@Immutable
+data class Card(
+  val id: Id,
+  val number: String,
+  val name: String,
+  val cardType: String,
+  val paymentSystem: String,
+  val status: String,
+) {
+  @JvmInline
   value class Id (private val id: String)
 }

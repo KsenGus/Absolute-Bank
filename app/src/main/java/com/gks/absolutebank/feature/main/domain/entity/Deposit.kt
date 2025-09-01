@@ -9,10 +9,7 @@ data class Deposit(
   val balance: Double,
   val currency: String,
   val status: String,
-  val term: String,
-  val rate: Double,
-  val minSize: Double
 ) {
   @JvmInline
-  value class Id (private val id: String)
+  value class Id (private val id: Int)
 }
